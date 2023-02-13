@@ -1,3 +1,4 @@
 .idea
 embeddings
 pretrained
+__pycache__
