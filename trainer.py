@@ -147,7 +147,7 @@ class Trainer(object):
 
             if idx % print_freq == 0:
                 train_iterator.set_description(
-                    loader_desc.format(epoch, loss_val, intent_correct / intent_total, intent_correct / slot_total))
+                    loader_desc.format(epoch, loss_val, intent_correct / intent_total, slot_correct / slot_total))
 
             completed_batch += 1
 
@@ -208,7 +208,7 @@ class Trainer(object):
 
             if idx % print_freq == 0:
                 evaluation_iterator.set_description(
-                    loader_desc.format(loss_val, intent_correct / intent_total, intent_correct / slot_total))
+                    loader_desc.format(loss_val, intent_correct / intent_total, slot_correct / slot_total))
 
             completed_batch += 1
 
