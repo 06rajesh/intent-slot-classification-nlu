@@ -89,7 +89,7 @@ class JointBert(BertPreTrainedModel):
 
         # 2. Slot Softmax
         if slot_labels_ids is not None:
-            slot_loss_fct = nn.CrossEntropyLoss(ignore_index=0)
+            slot_loss_fct = nn.CrossEntropyLoss()
             # Only keep active parts of the loss
             if attention_mask is not None:
                 active_loss = attention_mask.view(-1) == 1
