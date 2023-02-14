@@ -1,3 +1,6 @@
+import os
+
+import torch
 import torch.nn as nn
 from transformers import BertPreTrainedModel, BertModel, BertConfig
 
@@ -36,6 +39,33 @@ class JointBert(BertPreTrainedModel):
 
         self.intent_classifier = IntentClassifier(config.hidden_size, self.num_intent_class, args.dropout_rate)
         self.slot_classifier = SlotClassifier(config.hidden_size, self.num_slot_labels, args.dropout_rate)
+
+    def soft_load_from_pretrained(self, model_path:str, device:torch.device = 'cpu'):
+        if not os.path.isfile(model_path):
+            raise Warning('File not found. Model could not be loaded from pretrained')
+
+        checkpoint = torch.load(model_path, map_location=device)
+        loaded_model = checkpoint['model']
+        model_dict = self.state_dict()
+
+        missed_layer = []
+        for key in checkpoint['model'].keys():
+            if key in model_dict and model_dict[key].shape == loaded_model[key].shape:
+                pname = key
+                pval = loaded_model[key]
+                model_dict[pname] = pval.clone().to(model_dict[pname].device)
+            else:
+                print(key, model_dict[key].shape, loaded_model[key].shape)
+                missed_layer.append(key)
+
+        if len(missed_layer) > 0:
+            print('{} layers has mismatched shape. Could not be loaded. Following layers to be fine-tuned'.format(
+                len(missed_layer)))
+            print(missed_layer)
+        else:
+            print('All layers loaded successfully')
+
+        self.load_state_dict(model_dict)
 
     def forward(self, input_ids, attention_mask, token_type_ids, intent_label_ids, slot_labels_ids):
         outputs = self.bert(input_ids, attention_mask=attention_mask,

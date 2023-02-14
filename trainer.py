@@ -1,4 +1,5 @@
 import math
+import typing
 from pathlib import Path
 
 from tqdm import tqdm
@@ -25,7 +26,7 @@ class Trainer(object):
 
     _max_validation_loss:float
 
-    def __init__(self, args:Config, model:Module, optimizer: torch.optim.Optimizer, dataset:NLUDataset, collator:Collator, testing=False):
+    def __init__(self, args:Config, model:Module, optimizer: typing.Optional[torch.optim.Optimizer], dataset:NLUDataset, collator:Collator, testing=False):
         self.args = args
         self.device = torch.device(args.device)
         self.output_dir = Path(args.output_dir)

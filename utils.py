@@ -206,11 +206,15 @@ def import_data(file_path:str, limit=-1, tokenizer:PreTrainedTokenizer=None):
     sentences, labels = list(), list()
     idx = 0
 
+    max_sentence_len = 0
     for key in json_data.keys():
         data = json_data[key]
         words, tagged = mapper.compute_sentence_labels(data['text'], data['positions'])
 
         intent = data['intent']
+
+        if len(words) > max_sentence_len:
+            max_sentence_len = len(words)
 
         sentences.append(words)
         labels.append((intent, tagged))
@@ -218,6 +222,7 @@ def import_data(file_path:str, limit=-1, tokenizer:PreTrainedTokenizer=None):
             break
         idx += 1
 
+    print('Imported data with a maximum sentence length of: {}'.format(max_sentence_len))
     return sentences, labels
 
 

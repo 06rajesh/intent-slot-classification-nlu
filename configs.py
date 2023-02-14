@@ -1,4 +1,6 @@
 import json
+import os.path
+import ast
 
 from typing import List
 from pathlib import Path
@@ -21,9 +23,9 @@ class Config:
 
     def __init__(self,
                  device:str ='cpu',
-                 batch_size:int = 4,
+                 batch_size:int = 2,
                  num_workers:int = 1,
-                 max_sentence_length=100,
+                 max_sentence_length=50,
                  dropout: int = 0.20,
                  learning_rate: float = 0.0001,
                  weight_decay: float = 0.0005,
@@ -45,6 +47,41 @@ class Config:
         self.ignore_index = ignore_index
         self.slot_loss_coef = slot_loss_coef
         self.output_dir = output_dir
+
+    @classmethod
+    def from_pretrained(self, config_path: str):
+
+        config_path = Path(config_path)
+
+        if os.path.isdir(config_path):
+            config_path = config_path / 'config.json'
+
+        default_conf = self()
+        default_conf.tags_list = []
+        default_conf.intents_list = []
+
+        # Opening JSON file
+        f = open(config_path)
+
+        configs = json.load(f)
+
+        f.close()
+
+        for item in configs:
+            val = getattr(default_conf, item)
+            config_val = configs[item]
+            if isinstance(val, bool):
+                config_val = True if configs[item].capitalize() == 'True' else False
+            elif isinstance(val, int):
+                config_val = int(configs[item])
+            elif isinstance(val, float):
+                config_val=  float(configs[item])
+            elif isinstance(val, List):
+                config_val = ast.literal_eval(configs[item])
+
+            setattr(default_conf, item, config_val)
+
+        return default_conf
 
     def save_config(self, path:str=None):
 
