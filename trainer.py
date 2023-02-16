@@ -123,10 +123,12 @@ class Trainer(object):
 
     def train_one_epoch(self, epoch:int):
         self.model.train()
-        print_freq = 2
+        print_freq = 10
 
         loader_desc = 'Epoch [{:d}]: loss = {:.4f}, accuracy (intent = {:.4f}, slots =  {:.4f})'
         train_iterator = tqdm(self.data_loader_train, desc=loader_desc.format(epoch, 0.0, 0.0, 0.0))
+
+        n_batch = len(self.data_loader_train)
 
         intent_total = 0
         intent_correct = 0
@@ -168,11 +170,13 @@ class Trainer(object):
             losses.backward()
             self.optimizer.step()
 
+            completed_batch += 1
+
             if idx % print_freq == 0:
                 train_iterator.set_description(
                     loader_desc.format(epoch, loss_val, intent_correct / intent_total, slot_correct / slot_total))
 
-            completed_batch += 1
+                self._writer.add_scalar('training_loss', total_loss / completed_batch, epoch*n_batch + (idx+1))
 
             if self.testing and idx == 10:
                 break
