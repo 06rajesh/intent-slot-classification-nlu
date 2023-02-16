@@ -6,6 +6,7 @@ from tqdm import tqdm
 import torch
 from torch.nn import Module
 from torch.utils.data import DataLoader, random_split, RandomSampler, SequentialSampler
+from torch.utils.tensorboard import SummaryWriter
 
 from utils import import_data, save_on_master
 from configs import Config
@@ -25,6 +26,7 @@ class Trainer(object):
     data_loader_val: DataLoader
 
     _max_validation_loss:float
+    _writer:SummaryWriter
 
     def __init__(self, args:Config, model:Module, optimizer: typing.Optional[torch.optim.Optimizer], dataset:NLUDataset, collator:Collator, testing=False):
         self.args = args
@@ -38,6 +40,12 @@ class Trainer(object):
         self._max_validation_loss = 6.0
 
         self._init_data_loaders(args, dataset, collator)
+
+        if args.version != "":
+            self.output_dir = self.output_dir / args.version
+
+        summary_dir = self.output_dir / 'summary'
+        self._writer = SummaryWriter(str(summary_dir))
 
 
     def _init_data_loaders(self, args:Config, dataset: NLUDataset, collator:Collator):
@@ -75,8 +83,23 @@ class Trainer(object):
         self._before_train()
 
         for epoch in range(self.args.start_epoch, self.args.epochs):
-            stats = self.train_one_epoch(epoch)
+            train_stats = self.train_one_epoch(epoch)
             validation_stats = self.evaluate()
+
+            self._writer.add_scalars('epoch_loss', {
+                "training": train_stats['avg_loss'],
+                "validation": validation_stats['avg_loss'],
+            }, epoch)
+
+            self._writer.add_scalars('intent_accuracy', {
+                "training": train_stats['intent_acc'],
+                "validation": validation_stats['intent_acc'],
+            }, epoch)
+
+            self._writer.add_scalars('slot_accuracy', {
+                "training": train_stats['slot_acc'],
+                "validation": validation_stats['slot_acc'],
+            }, epoch)
 
             self._after_evaluation(validation_stats, epoch)
 

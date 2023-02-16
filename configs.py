@@ -20,6 +20,7 @@ class Config:
     ignore_index:int
     slot_loss_coef:float
     output_dir:str
+    version:str
 
     def __init__(self,
                  device:str ='cpu',
@@ -33,7 +34,8 @@ class Config:
                  epochs: int = 10,
                  ignore_index:int = -100,
                  slot_loss_coef:float = 1.0,
-                 output_dir:str = './pretrained/v.0.1/'
+                 output_dir:str = './pretrained/',
+                 version:str = 'v.0.1'
     ):
         self.device = device
         self.batch_size = batch_size
@@ -47,6 +49,7 @@ class Config:
         self.ignore_index = ignore_index
         self.slot_loss_coef = slot_loss_coef
         self.output_dir = output_dir
+        self.version = version
 
     @classmethod
     def from_pretrained(self, config_path: str):

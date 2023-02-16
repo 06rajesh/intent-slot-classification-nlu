@@ -1,7 +1,7 @@
 import torch
 from transformers import BertTokenizer, BertConfig
 
-from utils import import_data, save_on_master
+from utils import import_data
 from configs import Config
 from dataset import NLUDataset, Collator
 from models import JointBert
