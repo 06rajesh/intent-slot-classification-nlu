@@ -21,6 +21,7 @@ class Config:
     slot_loss_coef:float
     output_dir:str
     version:str
+    bert_model_name:str
 
     def __init__(self,
                  device:str ='cpu',
@@ -35,7 +36,8 @@ class Config:
                  ignore_index:int = -100,
                  slot_loss_coef:float = 1.0,
                  output_dir:str = './pretrained/',
-                 version:str = 'v.0.1'
+                 version:str = 'v.0.1',
+                 bert_model_name:str='bert-base-uncased',
     ):
         self.device = device
         self.batch_size = batch_size
@@ -50,6 +52,7 @@ class Config:
         self.slot_loss_coef = slot_loss_coef
         self.output_dir = output_dir
         self.version = version
+        self.bert_model_name = bert_model_name
 
     @classmethod
     def from_pretrained(self, config_path: str):

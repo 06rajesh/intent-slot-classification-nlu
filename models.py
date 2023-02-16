@@ -28,11 +28,11 @@ class SlotClassifier(nn.Module):
         return self.linear(x)
 
 class JointBert(BertPreTrainedModel):
-    def __init__(self, config:BertConfig, args: Config, bert_model="bert-base-uncased"):
+    def __init__(self, config:BertConfig, args: Config):
         super(JointBert, self).__init__(config)
 
         self.args = args
-        self.bert = BertModel.from_pretrained(bert_model)
+        self.bert = BertModel.from_pretrained(args.bert_model_name)
 
         self.num_intent_class = len(args.intents_list)
         self.num_slot_labels = len(args.tags_list)

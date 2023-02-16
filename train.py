@@ -36,7 +36,7 @@ def train(args:Config, dataset:NLUDataset, collator:Collator):
 if __name__ == '__main__':
     args = Config()
 
-    bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', model_max_length=args.max_sentence_length)
+    bert_tokenizer = BertTokenizer.from_pretrained(args.bert_model_name, model_max_length=args.max_sentence_length)
     sentences, labels = import_data("nlu_traindev/train.json", limit=-1, tokenizer=bert_tokenizer)
 
     collator = Collator(bert_tokenizer)
