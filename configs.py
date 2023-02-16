@@ -97,6 +97,8 @@ class Config:
 
         if not path:
             path = self.output_dir
+            if self.version != "":
+                path = path + "/" + self.version
 
         path = Path(path)
         target_file = path / 'config.json'
