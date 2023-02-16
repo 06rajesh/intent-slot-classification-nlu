@@ -11,6 +11,12 @@ Extracting intents and slots from textual command using BERT `sequence output` a
 * unidecode
 * tensorboard
 
+### Results
+| Accuracy      | Intent        | Slot  |
+| ------------- |:-------------:| -----:|
+| Training      | 99%           | 99%   |
+| Validation    | 97%           | 98%   |
+
 ### Sample Output
 ```buildoutcfg
     "0": {
