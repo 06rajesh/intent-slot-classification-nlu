@@ -1,8 +1,11 @@
+import os
+import argparse
+import json
 from pathlib import Path
-from transformers import BertTokenizer, BertConfig
-from typing import List, Optional
+from typing import List
 
 import torch
+from transformers import BertTokenizer, BertConfig
 
 from configs import Config
 from models import JointBert
@@ -19,6 +22,8 @@ class Predictor(object):
     def __init__(self, args:Config):
         configuration = BertConfig()
         self.model = JointBert(config=configuration, args=args)
+
+        model_path = output_dir / 'checkpoint.pth'
         self.model.soft_load_from_pretrained(model_path=str(model_path))
 
         self.tokenizer = BertTokenizer.from_pretrained(args.bert_model_name, model_max_length=args.max_sentence_length)
@@ -118,27 +123,73 @@ class Predictor(object):
         slot_preds = torch.argmax(slot_logits.detach(), dim=2)
         slots = self.slot_prediction_to_label(slot_preds)
 
+        output = []
         for i, s in enumerate(sentences):
             formatted = self._convert_sentence_to_output_format(s, intents[i], slots[i])
-            print(formatted)
+            output.append(formatted)
+
+        return output
+
+    def predict_from_file(self, input_file:str, output_file:str):
+        with open(input_file, "r") as read_file:
+            input_data = json.load(read_file)
+
+        batch_size = self.args.batch_size
+
+        keys = list(input_data.keys())
+        key_chunks = [keys[x:x+batch_size] for x in range(0, len(keys), batch_size)]
+
+        outputs = dict()
+        for chunk in key_chunks:
+            sentences = []
+            for key in chunk:
+                sentences.append(input_data[key]['text'])
+
+            chunk_out = self.predict(sentences)
+            for i in range(len(chunk_out)):
+                outputs[chunk[i]] = chunk_out[i]
+
+        json_out = json.dumps(outputs, indent=4)
+        with open(output_file, 'w') as f:
+            f.write(json_out)
 
 if __name__ == '__main__':
-    output_dir = Path('./pretrained/v.0.2')
+    parser = argparse.ArgumentParser(
+        prog='JointBERT predictor',
+        description='Predict Intent and slots from input file sentences using Pretrained JointBERT model',
+        epilog='developed by Rajesh Baidya')
 
-    args = Config.from_pretrained(str(output_dir))
-    args.device = 'cpu'
-    args.batch_size = 4
-    args.output_dir = output_dir
+    parser.add_argument('-m', '--model', help="Pretrained Model Directory", required=True)
+    parser.add_argument('-i', '--input', help="Input file for prediction. (See code for input file format)")
+    parser.add_argument('-o', '--output', help="Output file for the prediction.")
 
-    model_path = output_dir / 'checkpoint.pth'
+    args = parser.parse_args()
 
-    # print(args.__dict__)
-
-    sentences = [
+    samples = [
         "I'm looking for a local cafeteria that has wifi accesss for a party of 4",
         "book for one in Indiana at a restaurant",
         "Add As I Was Going to St Ives to the fantasía playlist."
     ]
 
-    predictor = Predictor(args)
-    predictor.predict(sentences)
+    output_dir = Path(args.model)
+
+    config = Config.from_pretrained(str(output_dir))
+    config.device = 'cpu'
+    config.output_dir = output_dir
+
+    # print(args.__dict__)
+    predictor = Predictor(config)
+
+    if args.input == None:
+        output = predictor.predict(samples)
+        print(output)
+    else:
+        assert os.path.isfile(args.input)
+        input_file = Path(args.input)
+
+        if args.output == None:
+            output_file = input_file.parent / 'output.json'
+        else:
+            output_file = Path(args.output)
+
+        predictor.predict_from_file(str(input_file), str(output_file))

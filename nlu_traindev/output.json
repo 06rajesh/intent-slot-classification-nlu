@@ -1,0 +1,158 @@
+{
+    "0": {
+        "intent": "BookRestaurant",
+        "text": "I'm looking for a local cafeteria that has wifi accesss for a party of 4",
+        "slots": {
+            "spatial_relation": "local",
+            "restaurant_type": "cafeteria",
+            "facility": "wifi",
+            "party_size_number": "4"
+        }
+    },
+    "1": {
+        "intent": "AddToPlaylist",
+        "text": "Add As I Was Going to St Ives to the fantas\u00eda playlist.",
+        "slots": {
+            "entity_name": "as i was going to st ives",
+            "playlist": "fantasia"
+        }
+    },
+    "2": {
+        "intent": "BookRestaurant",
+        "text": "book for one in Indiana at a restaurant",
+        "slots": {
+            "party_size_number": "one",
+            "state": "indiana",
+            "restaurant_type": "restaurant"
+        }
+    },
+    "3": {
+        "intent": "AddToPlaylist",
+        "text": "put this album on my conexiones list",
+        "slots": {
+            "music_item": "album",
+            "playlist_owner": "my",
+            "playlist": "conexiones"
+        }
+    },
+    "4": {
+        "intent": "AddToPlaylist",
+        "text": "Add this track to Duetos",
+        "slots": {
+            "music_item": "track",
+            "playlist": "duetos"
+        }
+    },
+    "5": {
+        "intent": "AddToPlaylist",
+        "text": "add Fabri Fibra to The Birth of Cool",
+        "slots": {
+            "artist": "fabri fibra",
+            "playlist": "birth of cool"
+        }
+    },
+    "6": {
+        "intent": "AddToPlaylist",
+        "text": "add Nothing Fancy to Meditate to Sounds of Nature playlist",
+        "slots": {
+            "entity_name": "##itate",
+            "playlist": "sounds of nature"
+        }
+    },
+    "7": {
+        "intent": "AddToPlaylist",
+        "text": "put this track on the playlist with the name roadrunner rec new releases",
+        "slots": {
+            "music_item": "track",
+            "playlist": "roadrunner rec new releases"
+        }
+    },
+    "8": {
+        "intent": "AddToPlaylist",
+        "text": "Put this Lidell Townsell track on esenciales",
+        "slots": {
+            "artist": "lidell townsell",
+            "music_item": "track",
+            "playlist": "esenciales"
+        }
+    },
+    "9": {
+        "intent": "AddToPlaylist",
+        "text": "Add tune to cleaning the house",
+        "slots": {
+            "music_item": "tune",
+            "playlist": "cleaning the house"
+        }
+    },
+    "10": {
+        "intent": "AddToPlaylist",
+        "text": "add this artist to sunshine reggae",
+        "slots": {
+            "music_item": "artist",
+            "playlist": "sunshine reggae"
+        }
+    },
+    "11": {
+        "intent": "BookRestaurant",
+        "text": "book a table in Tennessee for 1 for next August",
+        "slots": {
+            "state": "tennessee",
+            "party_size_number": "1",
+            "timerange": "next august"
+        }
+    },
+    "12": {
+        "intent": "AddToPlaylist",
+        "text": "Add htoo ein thin to my brooklyn beat playlist.",
+        "slots": {
+            "entity_name": "htoo ein thin",
+            "playlist_owner": "my",
+            "playlist": "brooklyn beat"
+        }
+    },
+    "13": {
+        "intent": "AddToPlaylist",
+        "text": "Add the crabfish to my playlist called The Sleep Machine Rainforest",
+        "slots": {
+            "entity_name": "the crabfish",
+            "playlist_owner": "my",
+            "playlist": "the sleep machine rainforest"
+        }
+    },
+    "14": {
+        "intent": "AddToPlaylist",
+        "text": "add The Crowd to corinne's acoustic soul playlist",
+        "slots": {
+            "entity_name": "the crowd",
+            "playlist_owner": "corinne ' s",
+            "playlist": "acoustic soul"
+        }
+    },
+    "15": {
+        "intent": "AddToPlaylist",
+        "text": "Add an album to my list cl\u00e1sicos de fogata",
+        "slots": {
+            "music_item": "album",
+            "playlist_owner": "my",
+            "playlist": "clasicos de fogata"
+        }
+    },
+    "16": {
+        "intent": "AddToPlaylist",
+        "text": "Add an album to my playlist bachata lovers",
+        "slots": {
+            "music_item": "album",
+            "playlist_owner": "my",
+            "playlist": "bachata lovers"
+        }
+    },
+    "17": {
+        "intent": "BookRestaurant",
+        "text": "book a bar in San Marino for five",
+        "slots": {
+            "restaurant_type": "bar",
+            "country": "san marino",
+            "party_size_number": "five"
+        }
+    }
+}
